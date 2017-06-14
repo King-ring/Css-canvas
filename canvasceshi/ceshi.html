@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        #box {
+            width: 300px;
+            height: 500px;
+            margin: 0 auto;
+        }
+        
+        #canvas {
+            border: 1px solid black;
+        }
+        
+        #text {
+            width: 150px;
+            height: 30px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            outline: none;
+        }
+        
+        #btn {
+            outline: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 20px;
+            width: 268px;
+            height: 108px;
+            background: url(images/btn.png);
+        }
+    </style>
+</head>
+
+<body>
+    <img style="display: none;" id="imgs" src="QQ图片20170613224641.jpg" />
+    <div id="box">
+        <canvas id="canvas" width="300" height="400"></canvas> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 姓名
+        <input type="text" name="" id="text" value="" />
+        <input type="button" name="" id="btn" value="" />
+    </div>
+    <script type="text/javascript">
+        var canvas = document.getElementById('canvas');
+        var btn = document.getElementsByTagName('input');
+        var Image = document.getElementById('imgs');
+        var ctx = canvas.getContext('2d');
+        Image.onload = function() {
+            ctx.drawImage(Image, 0, 0, 640, 735, 0, 0, 300, 400);
+        }
+        btn[1].onclick = function() {
+            if (btn[0].value == '' || btn[0].value.length > 4) {
+                alert('重新输入（字符不能超过4字）')
+            } else {
+                ctx.drawImage(Image, 0, 0, 640, 735, 0, 0, 300, 400);
+                ctx.beginPath();
+                ctx.fillStyle = 'black'
+                ctx.font = "24px 微软雅黑";
+                ctx.fillText(btn[0].value, 200, 80);
+                ctx.font = "14px 微软雅黑";
+                ctx.fillText(btn[0].value, 96, 350);
+                ctx.closePath();
+
+            }
+        }
+
+
+        canvas.onclick = function() {
+            var image = new Image();
+            image.src = canvas.toDataURL("image/png");
+            window.open(canvas.toDataURL());
+
+        }
+    </script>
+</body>
+
+</html>
