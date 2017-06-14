@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<style>
+    .btn {
+        top: 90%;
+    }
+    
+    .sha {
+        width: 243px;
+        height: 73px;
+        position: fixed;
+        top: 0px;
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="wrapper">
+        <div class="page page1" style="display:block;">
+            <img class="t1 animated fadeInLeft" src="images/t1.png" alt="" />
+            <img class="t2 animated fadeInRight" src="images/t2.png" alt="" />
+            <img class="t3" src="images/t3.png" alt="" />
+            <img class="t4" src="images/t4.png" alt="" />
+            <img class="t5 shake-hard infinite" src="images/t5.png" alt="" />
+            <div class="form">
+                <img class="person" src="images/person.gif" alt="" />
+                <div class="formlist">
+                    <label>姓名:</label><input type="text" name="name" placeholder="" />
+                </div>
+                <div class="formlist">
+                    <label>入职年份:</label>
+                    <span></span>
+                    <select name="" id="year">
+					<option value=""></option>
+				</select>
+                </div>
+            </div>
+            <a href="###"><img class="btn" src="images/btn.png" alt="" /></a>
+        </div>
+        <div class="sha"><img src="images/sharepic.png" alt=""></div>
+        <div class="page page2" style="display: none;">
+            <div class="imglist clearfix" id="imglist">
+                <div class="p1"><img src="images/p1-1.png" alt="" /><span>30</span></div>
+                <img src="images/p2-1.png" alt="" />
+                <img src="images/p3-1.png" alt="" />
+                <img src="images/p4-1.png" alt="" />
+                <img src="images/p5-1.png" alt="" />
+                <img src="images/p6-1.png" alt="" />
+                <img src="images/p7-1.png" alt="" />
+                <div class="p8"></div>
+                <div class="p9"><img src="images/p9-1.png" alt="" /><span>10</span></div>
+                <img src="images/p10-1.png" alt="" />
+            </div>
+        </div>
+
+    </div>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="js/common.js"></script>
+    <script type="text/javascript" src="http://html2canvas.hertzen.com/build/html2canvas.js"></script>
+    <script language="javascript">
+        $(function() {
+            //		  写入入职年份
+            var n = 2017;
+            while (n > 1946) {
+                n--;
+                $("#year").append("<option value=" + n + ">" + n + "</option>");
+            }
+            //		  表单非空判断
+            $(".btn").click(function() {
+                var name = $("input[name='name']").val();
+                var year = $("select option:checked").val();
+                if (name == "") {
+                    alert("请输入姓名");
+                    return false;
+                } else if (year == "") {
+                    alert("请输入入职年份");
+                    return false;
+                }
+                //			抓狂指数计算
+                var years = 2016 - year;
+                var zk = 0;
+                if (years == 1) {
+                    zk = 10;
+                } else if (years >= 2 && years <= 3) {
+                    zk = 8;
+                } else if (years >= 4 && years <= 8) {
+                    zk = 6;
+                } else if (years >= 9 && years <= 15) {
+                    zk = 5;
+                } else if (years >= 16 && years <= 30) {
+                    zk = 3;
+                } else if (years >= 31) {
+                    zk = 1;
+                }
+                $(".p1 span").text(years);
+                $(".p9 span").text(zk);
+                $(".p8").text("我是" + name + "医生").css("font-family", "cartoon");
+                $(".page1").fadeOut();
+                $(".page2").fadeIn();
+                //			性格标签图片随机
+                var p2 = (Math.floor(Math.random() * 8)) + 1;
+                var p14 = (Math.floor(Math.random() * 3)) + 1;
+                var arr = [1, p2, p2, p2, p2, p2, p2, 1, p2, p2, p2, p2, 1, p14];
+                var img = document.querySelectorAll(".imglist img");
+                for (var index = 0; index < img.length; index++) {
+                    $(img[index]).attr("src", "images/p" + (index + 1) + "-" + arr[index] + ".png");
+                }
+                $(".sha").show();
+                toBig(imgs);
+                toBig(divs);
+            });
+            //		  点击分享生成图片
+            var clicked = 1;
+            $(".sha").click(function() {
+
+                //要将 canvas 的宽高设置成容器宽高的 2 倍
+                if (clicked == 1) {
+                    var div = $("#imglist")
+                    var w = div.width();
+                    var h = div.height();
+                }
+                var canvas = document.createElement("canvas");
+                canvas.width = w * 2;
+                canvas.height = h * 2;
+                canvas.style.width = w + "px";
+                canvas.style.height = h + "px";
+                var context = canvas.getContext("2d");
+                //然后将画布缩放，将图像放大两倍画到画布上
+                var cenX = (div.offset().left) * 2;
+                var cenY = (div.offset().top) * 2;
+                context.translate(-cenX, -cenY);
+                context.scale(2, 2);
+                html2canvas(div, { //用html2canvas插件直接把dom元素放入到画布中，
+                    canvas: canvas,
+                    onrendered: function(canvas) {
+                        var image = new Image(); //创建img标签
+                        image.id = "newimg";
+                        image.src = canvas.toDataURL("image/png"); //修改img路径
+                        div.append(image); //把图片放到dom元素中
+                    }
+                });
+                $(".sha").hide();
+                clicked = 0;
+            });
+            //		  图片随机翻转动画
+            var imgs = document.querySelectorAll(".imglist img");
+            var divs = document.querySelectorAll(".imglist div");
+            var endNum = 0;
+            var endNum2 = 0;
+
+            function toBig(obj) {
+                for (var i = 0; i < obj.length; i++) {
+                    obj[i].style.transition = "";
+                    obj[i].style.opacity = 0;
+                    obj[i].style.transform = 'rotateY(0deg) translateZ(-' + Math.random() * 500 + 'px)';
+                    (function(i) {
+                        setTimeout(function() {
+                            motion(obj[i], "1.2s", function() {
+                                this.style.opacity = 1;
+                                this.style.transform = "rotateY(-360deg) translateZ(0)";
+                            }, function() {
+                                endNum2++;
+                                if (endNum2 == obj.length) {
+                                    on = true;
+                                }
+                            })
+                        }, Math.random() * 500)
+                    })(i)
+                }
+            }
+
+
+            function motion(obj, time, fn, callback) {
+                obj.style.transition = time;
+                fn.call(obj);
+                var called = false;
+                obj.addEventListener("transitionend", function() {
+                    if (!called) {
+                        callback && callback.call(obj);
+                        called = true;
+                    }
+                }, false);
+            };
+        });
+    </script>
+</body>
+
+</html>
